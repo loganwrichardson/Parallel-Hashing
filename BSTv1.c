@@ -1,6 +1,10 @@
 #include <stdlib.h>
+#include <semaphore.h>
 #include "helpers.h"
 #include "macros.h"
+#include "wrappers.h"
+#include "producerConsumer1.h"
+#include "BSTversions.h"
 
 struct BSTv1
 {
@@ -22,20 +26,23 @@ static void BSTv1GetNums(int * array);
 //Build the BST using just one thread (the calling thread). 
 //Check for correctness.
 //Return the time it takes to do it.
-double doBSTv1(int * input, int * sortedInput, int size)
+//double doBSTv1(int * input, int * sortedInput, int size)
+double doBSTv1(int * sortedInput, int size, int which)
 {
    int i;
    int treeValues[size];
 
    TIMERSTART(BSTV1)
 
-   for (i = 0; i < size; i++)
+   while((i = consume1())!= -1)
    {
       //insert each value
-      BSTv1Insert(input[i]);
+      BSTv1Insert(i);
    }
    //get the values
+
    BSTv1GetNums(treeValues);
+    
 
    TIMERSTOP(BSTV1)   
    double treeTime = DURATION(BSTV1)
@@ -50,15 +57,54 @@ double doBSTv1(int * input, int * sortedInput, int size)
 //root node of the tree (initially NULL)
 void BSTv1Insert(int value)
 {
-   //TODO
    BSTv1_t * ptr = root; //root of tree
+
+   //insert the value into the tree
+   if (root == NULL)
+   {
+      root = createNode(value);
+      return;
+   }
+
+  while (1)
+   {
+      if (value < ptr->val)
+      {
+         if(ptr->left == NULL)
+         {
+            ptr->left = createNode(value);
+            return;
+         }
+         else
+         {
+            ptr = ptr->left;
+         }
+      }
+      else
+      {
+         if(ptr->right == NULL)
+         {
+            ptr->right = createNode(value);
+            return;
+         }
+         else
+         {
+            ptr = ptr->right;
+         }
+      }
+   }
 }
 
 //create a node to insert in the tree
 BSTv1_t * createNode(int value)
 {
    //TODO
-   return NULL;
+   BSTv1_t *newNode = (BSTv1_t *)Malloc(sizeof(BSTv1_t));
+   newNode->val = value;
+   newNode->left = NULL;
+   newNode->right = NULL;
+
+   return newNode;
 }
 
 //get the nodes in the tree by doing an inorder traversal
@@ -72,4 +118,12 @@ void BSTv1GetNums(int * array)
 void inorder(BSTv1_t * ptr, int * array)
 {
    //TODO
+   static int i = 0;
+   if(ptr == NULL)
+   {
+      return;
+   }
+   inorder(ptr->left, array);
+   array[i++] = ptr->val;
+   inorder(ptr->right, array);
 }
