@@ -5,6 +5,7 @@
 #include "wrappers.h"
 #include <semaphore.h>
 #include "producerConsumer1.h"
+#include "producerConsumer2.h"
 #include "BSTversions.h"
 
 
@@ -113,8 +114,9 @@ void * doInsert(void * arg)
       }
    }
    else if (which == PC2) {
-       /*while((i = consume2())!= -1){
-         BSTv3Insert(i);*/
+      while((i = consume2())!= -1){
+         BSTv3Insert(i);
+      }
    }
    
    return NULL;

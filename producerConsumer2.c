@@ -1,9 +1,7 @@
-#include <semaphore.h>
 #include <pthread.h>
 #include <stdio.h>
 #include "producerConsumer2.h"
 #include "wrappers.h"
-#include <condition_variable>
 
 
 /* This code implements producer-consumer using semaphores */
@@ -17,10 +15,11 @@ static int total;
 //You'll need more static variables
 static pthread_t * threads;
 static int producer_thread;
+
 // Condition variables
-Pthread_cond_t full = PTHREAD_COND_INITIALIZER;
-Pthread_cond_t empty = PTHREAD_COND_INITIALIZER;
-Pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+static pthread_cond_t full = PTHREAD_COND_INITIALIZER;
+static pthread_cond_t empty = PTHREAD_COND_INITIALIZER;
+static pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
 
 
 //Struct for the producer arg
@@ -110,9 +109,9 @@ void createProducers2(int * input, int size, int numThreads)
 
 /*
  * joinProducer1
- * Joins each of the producer threads created by the createProducers1
+ * Joins each of the producer threads created by the createProducers2
  * function.
- * Destroys each of the semaphores.
+ * Destroys each of the condition variables and mutex.
  */
 void joinProducers2()
 {
@@ -121,9 +120,10 @@ void joinProducers2()
    for (i = 0; i < producer_thread; i++) {
       Pthread_join(threads[i], NULL);
    }
-   Sem_destroy(&full);
-   Sem_destroy(&empty);
-   Sem_destroy(&mutex);
+   Pthread_mutex_destroy(&mutex);
+   Pthread_cond_destroy(&full);
+   Pthread_cond_destroy(&empty);
+   
 }
 
 /*
@@ -141,14 +141,45 @@ void * producer(void * args)
    int i;
    producer_args_t* pargs = (producer_args_t*) args;
    for (i = pargs->start; i < pargs->end; i++) {
-      Sem_wait(&empty); 
-      Sem_wait(&mutex);
+      Pthread_mutex_lock(&mutex);
+         while (fill == SIZE) {
+            Pthread_cond_wait(&empty, &mutex);
+         }
       put(pargs->input[i]);
-      Sem_post(&mutex); 
-      Sem_post(&full);
+      if (fill == 1) {
+            Pthread_cond_signal(&full);
+        }
+        Pthread_mutex_unlock(&mutex);
    }
    return NULL;
 }
+/*void * producer(void * args)
+{
+   int i;
+   producer_args_t* pargs = (producer_args_t*) args;
+
+   for (i = pargs->start; i < pargs->end; i++) {
+      int item = pargs->input[i];
+      
+      Pthread_mutex_lock(&mutex);
+      
+      do {
+         if (fill < SIZE) {
+            put(item);
+            fill++;
+            if (fill == 1) {
+               Pthread_cond_signal(&full);
+            }
+            break;
+         }
+         Pthread_cond_wait(&empty, &mutex);
+      } while (1);
+
+      Pthread_mutex_unlock(&mutex);
+   }
+   
+   return NULL;
+}*/
 
 /*
  * consume1
@@ -160,16 +191,27 @@ void * producer(void * args)
  */
 int consume2()
 {
-   if (total == 0) {
+   Pthread_mutex_lock(&mutex);
+   
+   while (fill == 0 && total > 0) {
+      Pthread_cond_wait(&full, &mutex);
+    }
+
+   if (total == 0 && fill == 0) {
+      Pthread_mutex_unlock(&mutex);
       return -1;
    }
-   else{
-   Sem_wait(&full); 
-   Sem_wait(&mutex);
+
    int val = get();
-   total--;
-   Sem_post(&mutex);
-   Sem_post(&empty);
-   return val;
+   fill--;
+
+   if (total > 0 && fill == SIZE - 1) {
+      Pthread_cond_signal(&empty);
    }
+
+   total--;
+
+   Pthread_mutex_unlock(&mutex);
+   
+   return val;
 }

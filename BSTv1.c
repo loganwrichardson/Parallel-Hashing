@@ -4,6 +4,7 @@
 #include "macros.h"
 #include "wrappers.h"
 #include "producerConsumer1.h"
+#include "producerConsumer2.h"
 #include "BSTversions.h"
 
 struct BSTv1
@@ -46,8 +47,9 @@ double doBSTv1(int * sortedInput, int size, int which)
       }
    }
    else if (which == PC2) {
-       /*while((i = consume2())!= -1){
-         BSTv1Insert(i);*/
+       while((i = consume2()) != -1){
+         BSTv1Insert(i);
+      }
    }
 
 

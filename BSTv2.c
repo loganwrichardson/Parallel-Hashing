@@ -5,6 +5,7 @@
 #include "wrappers.h"
 #include <semaphore.h>
 #include "producerConsumer1.h"
+#include "producerConsumer2.h"
 #include "BSTversions.h"
 
 // BST node structure
@@ -102,10 +103,11 @@ void * doInsert(void *arg)
       }
    }
    else if (which == PC2) {
-       /*while((i = consume2())!= -1){
+      while((i = consume2())!= -1){
          Pthread_mutex_lock(&tree_lock);
          BSTv2Insert(i);
-         Pthread_mutex_unlock(&tree_lock);*/
+         Pthread_mutex_unlock(&tree_lock);
+      }
    }
     return NULL;
 }

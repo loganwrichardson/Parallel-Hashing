@@ -4,6 +4,7 @@
 #include "wrappers.h"
 #include <semaphore.h>
 #include "producerConsumer1.h"
+#include "producerConsumer2.h"
 #include "BSTversions.h"
 
 typedef struct BSTv4_t {
@@ -86,8 +87,9 @@ double doBSTv4(int * sortedInput, int size, int numThreads, int which)
       }
    }
    else if (which == PC2) {
-       /*while((i = consume2())!= -1){
-         BSTv4Insert(i);*/
+      while((i = consume2())!= -1){
+         BSTv4Insert(i);
+      }
    }
 
    //get the values

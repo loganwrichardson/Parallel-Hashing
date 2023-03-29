@@ -6,7 +6,7 @@
 #include "producerConsumer1.h"
 //TODO
 //uncomment this when ready
-//#include "producerConsumer2.h"
+#include "producerConsumer2.h"
 
 //static makes these local to this file
 static void makeInput(int * nums, int size);
@@ -17,9 +17,9 @@ static void printUsage();
 static void runBSTWithProducerConsumer1(int * input, int * sortedInput,
                                         int size, int numConsume,
                                         int numProduce, int which);
-/*static void runBSTWithProducerConsumer2(int * input, int * sortedInput,
+static void runBSTWithProducerConsumer2(int * input, int * sortedInput,
                                         int size, int numConsume,
-                                        int numProduce, int which);*/
+                                        int numProduce, int which);
 
 //default tree size and default number of threads
 #define SIZE_DEFAULT 1000
@@ -51,8 +51,8 @@ int main(int argc, char * argv[])
    //ProducerConsumer2 is implemented using Condition Variables
    //TODO
    //uncomment this when ready
-   //runBSTWithProducerConsumer2(input, sortedInput, size,
-   //                            numConsume, numProduce, PC2);
+   runBSTWithProducerConsumer2(input, sortedInput, size,
+                              numConsume, numProduce, PC2);
    return 0;
 }
 
@@ -116,7 +116,7 @@ void runBSTWithProducerConsumer1(int * input, int * sortedInput, int size,
  *  producer-consumer buffer
  * which - which producer-consumer to use
 */
-/*void runBSTWithProducerConsumer2(int * input, int * sortedInput, int size,
+void runBSTWithProducerConsumer2(int * input, int * sortedInput, int size,
                                  int numConsume, int numProduce, int which)
 {
    double treeTime;
@@ -151,7 +151,7 @@ void runBSTWithProducerConsumer1(int * input, int * sortedInput, int size,
    joinProducers2();
    printf("Time: %f sec\n", treeTime);
 
-}*/
+}
 
 /*
  * getArgs
