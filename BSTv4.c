@@ -23,6 +23,7 @@ static BSTv4_t * createNode(int value);
 static void inorder(BSTv4_t * ptr, int * array);
 static void BSTv4Insert(int value);
 static void BSTv4GetNums(int * array);
+static void * doInsert(void * arg);
 static void resetBSTv4();
 
 //function to create node
@@ -41,11 +42,15 @@ void BSTv4Insert(int value)
    BSTv4_t * node = root;
    BSTv4_t * newNode;
 
+   newNode = createNode(value);
+
    //insert the value into the tree
    if (root == NULL)
    {
-      root = createNode(value);
-      return;
+     if (__sync_bool_compare_and_swap(&root, NULL, newNode))
+         return;
+      else
+         free(newNode);
    }
    
    while (1)
@@ -54,9 +59,8 @@ void BSTv4Insert(int value)
       {
          if (node->left == NULL)
          {
-            newNode = createNode(value);
             if (__sync_bool_compare_and_swap(&(node->left), NULL, newNode))
-               break;
+              return;
          }
          else
             node = node->left;
@@ -65,15 +69,35 @@ void BSTv4Insert(int value)
       {
          if (node->right == NULL)
          {
-            newNode = createNode(value);
             if (__sync_bool_compare_and_swap(&(node->right), NULL, newNode))
-               break;
+               return;
          }
          else
             node = node->right;
       }
    }
 }
+
+// function for inserting nodes in the tree
+void * doInsert(void * arg)
+{
+   int i;
+   int which = *(int*)arg;
+   if (which == PC1) {
+      while((i = consume1()) != -1) {
+         //insert each value
+         BSTv4Insert(i);
+      }
+   }
+   else if (which == PC2) {
+      while((i = consume2())!= -1){
+         BSTv4Insert(i);
+      }
+   }
+   
+   return NULL;
+}
+
 
 //Build the BST using just numThreads threads and no lock. 
 //Check for correctness.
@@ -88,17 +112,19 @@ double doBSTv4(int * sortedInput, int size, int numThreads, int which)
    TIMERSTART(BSTV4)
 
    int i;
-   if (which == PC1) {
-      while((i = consume1()) != -1) {
-         //insert each value
-         BSTv4Insert(i);
-      }
+   pthread_t threads[numThreads];
+   for (i = 0; i < numThreads; i++)
+   {
+      int* whichPtr = (int*)Malloc(sizeof(int));
+      *whichPtr = which;
+      Pthread_create(&threads[i], NULL, doInsert, whichPtr);
    }
-   else if (which == PC2) {
-      while((i = consume2())!= -1){
-         BSTv4Insert(i);
-      }
+   
+   for (i = 0; i < numThreads; i++)
+   {
+      Pthread_join(threads[i], NULL);
    }
+
 
    //get the values
    BSTv4GetNums(treeValues);

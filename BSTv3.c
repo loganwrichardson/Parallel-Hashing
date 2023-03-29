@@ -54,16 +54,17 @@ BSTv3_t * createNode(int value)
 // function to insert value 
 void BSTv3Insert(int value)
 {
-   BSTv3_t * ptr = root; // root of tree
-   BSTv3_t * prev = ptr; // previous node visited
+   BSTv3_t * ptr; // root of tree
+   BSTv3_t * prev; // previous node visited
    pthread_mutex_lock(&root_lock); // lock the root node
    if (root == NULL) {
       root = createNode(value);
       pthread_mutex_unlock(&root_lock); // unlock the root node
       return;
    }
-   pthread_mutex_lock(&(ptr->lock)); // lock the root node
    pthread_mutex_unlock(&root_lock); // unlock the root node
+   ptr = root;
+   pthread_mutex_lock(&(ptr->lock)); // lock the root node
    while (1)
    {
       if (value < ptr->val)
