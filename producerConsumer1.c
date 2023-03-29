@@ -9,14 +9,19 @@
 #define SIZE 100
 //producer fills buffer; consumer empties buffer
 static int buffer[SIZE];
+
 //total used by consumer to determine how many remaining
 //values will be available at some point for consumption
 static int total;
+
 //You'll need more static variables
 //semaphores
 static sem_t full, empty, mutex;
 static pthread_t * threads;
 static int producer_thread;
+static int fill = 0;
+static int use = 0;
+pthread_mutex_t totalmutex;
 
 
 //Struct for the producer arg
@@ -37,7 +42,6 @@ static void * producer(void * arg);
  * get
  * called by consumer to get a value from the buffer
  */
-static int use = 0;
 int get()
 {
    int val;
@@ -50,7 +54,6 @@ int get()
  * put
  * called by producer to put a value in the buffer
  */
-static int fill = 0;
 void put(int ele)
 {
    //decrement empty semaphore to wait for available empty slot in buffer
@@ -66,7 +69,6 @@ void put(int ele)
  */
 void createProducers1(int * input, int size, int numThreads)
 {
-   //TODO
    //Initialize semaphores
    sem_init(&full, 0, 0);
    sem_init(&empty, 0, SIZE);
@@ -118,7 +120,6 @@ void createProducers1(int * input, int size, int numThreads)
  */
 void joinProducers1()
 {
-   //TODO
    int i;
    for (i = 0; i < producer_thread; i++) {
       Pthread_join(threads[i], NULL);
@@ -162,16 +163,20 @@ void * producer(void * args)
  */
 int consume1()
 {
-   if (total == 0) {
-      return -1;
-   }
-   else{
+   Pthread_mutex_lock(&totalmutex);
+    if (total == 0) {
+        Pthread_mutex_unlock(&totalmutex);
+        return -1;
+    }
+    else {
+        total--;
+    }
+   Pthread_mutex_unlock(&totalmutex);
    Sem_wait(&full); 
    Sem_wait(&mutex);
    int val = get();
-   total--;
    Sem_post(&mutex);
    Sem_post(&empty);
    return val;
-   }
-}
+ }
+

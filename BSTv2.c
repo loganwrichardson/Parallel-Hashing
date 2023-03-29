@@ -15,23 +15,25 @@ typedef struct BSTv2 {
     struct BSTv2* right;
 }BSTv2_t;
 
-// Struct for thread data
+/*// Struct for thread data
 typedef struct insert_data {
     int *input;
     int start;
     int end;
-} insert_data_t;
+} insert_data_t;*/
 
-// Global BST root and lock
+// Global BST root and lock and variable 
 static BSTv2_t* root = NULL;
 pthread_mutex_t tree_lock = PTHREAD_MUTEX_INITIALIZER;
+static int array_index = 0;
 
-//functions for creating nodes
+//functions for creating bst
 static BSTv2_t * createNode(int value);
 static void BSTv2Insert(int value);
 static void * doInsert(void * arg);
 static void inorder(BSTv2_t * ptr, int * array);
 static void BSTv2GetNums(int * array);
+static void resetBSTv2();
 
 //create a node to insert in the tree
 BSTv2_t * createNode(int value)
@@ -44,7 +46,7 @@ BSTv2_t * createNode(int value)
    return newNode;
 }
 
-
+// function for inserting value in node 
 void BSTv2Insert(int value)
 {
    BSTv2_t * ptr = root; //root of tree
@@ -88,12 +90,6 @@ void * doInsert(void *arg)
 {
    int i;
    int which = *(int*)arg;
-   /*while((i = consume1())!= -1)
-   {
-      Pthread_mutex_lock(&tree_lock);
-      BSTv2Insert(i);
-      Pthread_mutex_unlock(&tree_lock);
-   }*/
    if (which == PC1) {
       while((i = consume1()) != -1) {
          //insert each value
@@ -124,8 +120,11 @@ double doBSTv2(int * sortedInput, int size, int numThreads, int which)
   
    // Initialize global lock
    pthread_mutex_init(&tree_lock, NULL);
+
+   resetBSTv2();
   
    TIMERSTART(BSTV2)
+
    pthread_t threads[numThreads];
    for(i = 0; i< numThreads; i++){
       int* whichPtr = (int*)Malloc(sizeof(int));
@@ -136,9 +135,7 @@ double doBSTv2(int * sortedInput, int size, int numThreads, int which)
    // unlock tree after all threads are done
    for (i = 0; i < numThreads; i++) {
         Pthread_join(threads[i], NULL);
-
-    }
-
+   }
 
    //get the values
    BSTv2GetNums(treeValues);
@@ -151,6 +148,13 @@ double doBSTv2(int * sortedInput, int size, int numThreads, int which)
    return treeTime;
 }
 
+//function to reset the static variable 
+void resetBSTv2() {
+   root = NULL;
+   array_index = 0;
+}
+
+// function for getting values 
 void BSTv2GetNums(int * array)
 {
    inorder(root, array);
@@ -159,13 +163,12 @@ void BSTv2GetNums(int * array)
 //traversal of the tree
 void inorder(BSTv2_t * ptr, int * array)
 {
-   static int i = 0;
    if(ptr == NULL)
    {
       return;
    }
    inorder(ptr->left, array);
-   array[i++] = ptr->val;
+   array[array_index++] = ptr->val;
    inorder(ptr->right, array);
 }
 

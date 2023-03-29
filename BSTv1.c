@@ -17,12 +17,14 @@ typedef struct BSTv1 BSTv1_t;
 
 //static means these aren't accessible outside of this file
 static BSTv1_t * root = NULL; //pointer to root
+static int array_index  = 0;
 
 //functions for creating nodes
 static BSTv1_t * createNode(int value);
 static void inorder(BSTv1_t * ptr, int * array);
 static void BSTv1Insert(int value);
 static void BSTv1GetNums(int * array);
+static void resetBSTv1();
 
 //Build the BST using just one thread (the calling thread). 
 //Check for correctness.
@@ -32,6 +34,7 @@ double doBSTv1(int * sortedInput, int size, int which)
 {
    int i;
    int treeValues[size];
+   resetBSTv1();
 
    TIMERSTART(BSTV1)
 
@@ -66,6 +69,10 @@ double doBSTv1(int * sortedInput, int size, int which)
    return treeTime;
 }
 
+void resetBSTv1() {
+   root = NULL;
+   array_index = 0;
+}
 //insert the value into the tree
 //root declared at the top is the pointer to
 //root node of the tree (initially NULL)
@@ -132,12 +139,11 @@ void BSTv1GetNums(int * array)
 void inorder(BSTv1_t * ptr, int * array)
 {
    //TODO
-   static int i = 0;
    if(ptr == NULL)
    {
       return;
    }
    inorder(ptr->left, array);
-   array[i++] = ptr->val;
+   array[array_index++] = ptr->val;
    inorder(ptr->right, array);
 }

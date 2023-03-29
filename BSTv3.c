@@ -18,22 +18,27 @@ typedef struct BSTv3
    pthread_mutex_t lock;
 }BSTv3_t;
 
+/*
+//struct used in part1
 typedef struct insert_data {
     int *input;
     int start;
     int end;
-} insert_data_t;
+} insert_data_t;*/
 
-//Global BST root
+//Global initialization
 static BSTv3_t * root = NULL;
 pthread_mutex_t root_lock = PTHREAD_MUTEX_INITIALIZER;
+static int array_index = 0;
 
-//functions for creating node
+//functions for creating bst
 static BSTv3_t * createNode(int value);
 static void BSTv3Insert(int value);
 static void * doInsert(void * arg);
 static void inorder(BSTv3_t * ptr, int * array);
 static void BSTv3GetNums(int * array);
+static void resetBSTv3();
+
 
 //create a node to insert in the tree
 BSTv3_t * createNode(int value)
@@ -45,6 +50,8 @@ BSTv3_t * createNode(int value)
    pthread_mutex_init(&(newNode->lock), NULL); // initialize lock for the new node
    return newNode;
 }
+
+// function to insert value 
 void BSTv3Insert(int value)
 {
    BSTv3_t * ptr = root; // root of tree
@@ -102,11 +109,6 @@ void * doInsert(void * arg)
 {
    int i;
    int which = *(int*)arg;
-   /*while((i = consume1())!= -1)
-   {
-      //insert each value
-      BSTv3Insert(i);
-   }*/
    if (which == PC1) {
       while((i = consume1()) != -1) {
          //insert each value
@@ -130,6 +132,7 @@ double doBSTv3(int * sortedInput, int size, int numThreads, int which)
 {
    int i;
    int treeValues[size];
+   resetBSTv3();
 
    TIMERSTART(BSTV3)
 
@@ -159,21 +162,26 @@ double doBSTv3(int * sortedInput, int size, int numThreads, int which)
    return treeTime;
 }
 
+//reset the static variable 
+void resetBSTv3() {
+   root = NULL;
+   array_index = 0;
+}
+
+//function for getting values 
 void BSTv3GetNums(int * array)
 {
    inorder(root, array);
 }
 
-
 //traversal of the tree
 void inorder(BSTv3_t * ptr, int * array)
 {
-   static int i = 0;
    if(ptr == NULL)
    {
       return;
    }
    inorder(ptr->left, array);
-   array[i++] = ptr->val;
+   array[array_index++] = ptr->val;
    inorder(ptr->right, array);
 }

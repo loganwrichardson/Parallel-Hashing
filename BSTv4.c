@@ -7,20 +7,25 @@
 #include "producerConsumer2.h"
 #include "BSTversions.h"
 
+// BST node structure
 typedef struct BSTv4_t {
    int val;
    struct BSTv4_t * left;
    struct BSTv4_t * right;
 } BSTv4_t;
 
+//Global initialization
 static BSTv4_t * root = NULL;
+static int array_index = 0;
 
-//functions for creating nodes
+//functions for creating bst
 static BSTv4_t * createNode(int value);
 static void inorder(BSTv4_t * ptr, int * array);
 static void BSTv4Insert(int value);
 static void BSTv4GetNums(int * array);
+static void resetBSTv4();
 
+//function to create node
 BSTv4_t * createNode(int value)
 {
    BSTv4_t * node = (BSTv4_t *)malloc(sizeof(BSTv4_t));
@@ -30,7 +35,7 @@ BSTv4_t * createNode(int value)
    return node;
 }
 
-
+//function to insert value 
 void BSTv4Insert(int value)
 {
    BSTv4_t * node = root;
@@ -78,7 +83,10 @@ double doBSTv4(int * sortedInput, int size, int numThreads, int which)
 {
    int treeValues[size];
 
+   resetBSTv4();
+
    TIMERSTART(BSTV4)
+
    int i;
    if (which == PC1) {
       while((i = consume1()) != -1) {
@@ -103,7 +111,13 @@ double doBSTv4(int * sortedInput, int size, int numThreads, int which)
    return treeTime;
 }
 
-//get the nodes in the tree by doing an inorder traversal
+// function to reset the static variable 
+void resetBSTv4(){
+   root = NULL;
+   array_index = 0;
+}
+
+//function for getting values 
 void BSTv4GetNums(int * array)
 {
    inorder(root, array);
@@ -113,13 +127,12 @@ void BSTv4GetNums(int * array)
 //traversal of the tree
 void inorder(BSTv4_t * ptr, int * array)
 {
-   static int i = 0;
    if(ptr == NULL)
    {
       return;
    }
    inorder(ptr->left, array);
-   array[i++] = ptr->val;
+   array[array_index++] = ptr->val;
    inorder(ptr->right, array);
 }
 
