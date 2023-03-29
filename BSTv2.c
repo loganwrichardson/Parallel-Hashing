@@ -148,7 +148,7 @@ double doBSTv2(int * sortedInput, int size, int numThreads, int which)
    return treeTime;
 }
 
-//function to reset the static variable 
+//function to reset the static variables
 void resetBSTv2() {
    root = NULL;
    array_index = 0;

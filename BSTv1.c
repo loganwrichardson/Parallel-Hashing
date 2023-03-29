@@ -7,6 +7,7 @@
 #include "producerConsumer2.h"
 #include "BSTversions.h"
 
+//BST node structure 
 struct BSTv1
 {
    int val;
@@ -19,7 +20,7 @@ typedef struct BSTv1 BSTv1_t;
 static BSTv1_t * root = NULL; //pointer to root
 static int array_index  = 0;
 
-//functions for creating nodes
+//functions for creating bst
 static BSTv1_t * createNode(int value);
 static void inorder(BSTv1_t * ptr, int * array);
 static void BSTv1Insert(int value);
@@ -37,12 +38,7 @@ double doBSTv1(int * sortedInput, int size, int which)
    resetBSTv1();
 
    TIMERSTART(BSTV1)
-
-   /*while((i = consume1())!= -1)
-   {
-      //insert each value
-      BSTv1Insert(i);
-   }*/
+   
    if (which == PC1) {
       while((i = consume1()) != -1) {
          //insert each value
@@ -57,7 +53,6 @@ double doBSTv1(int * sortedInput, int size, int which)
 
 
    //get the values
-
    BSTv1GetNums(treeValues);
     
 
