@@ -79,10 +79,16 @@ double doBSTv4(int * sortedInput, int size, int numThreads, int which)
 
    TIMERSTART(BSTV4)
    int i;
-   while((i = consume1())!= -1)
-   {
-      BSTv4Insert(i);
-   } 
+   if (which == PC1) {
+      while((i = consume1()) != -1) {
+         //insert each value
+         BSTv4Insert(i);
+      }
+   }
+   else if (which == PC2) {
+       /*while((i = consume2())!= -1){
+         BSTv4Insert(i);*/
+   }
 
    //get the values
    BSTv4GetNums(treeValues);

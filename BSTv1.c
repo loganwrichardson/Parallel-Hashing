@@ -34,11 +34,23 @@ double doBSTv1(int * sortedInput, int size, int which)
 
    TIMERSTART(BSTV1)
 
-   while((i = consume1())!= -1)
+   /*while((i = consume1())!= -1)
    {
       //insert each value
       BSTv1Insert(i);
+   }*/
+   if (which == PC1) {
+      while((i = consume1()) != -1) {
+         //insert each value
+         BSTv1Insert(i);
+      }
    }
+   else if (which == PC2) {
+       /*while((i = consume2())!= -1){
+         BSTv1Insert(i);*/
+   }
+
+
    //get the values
 
    BSTv1GetNums(treeValues);

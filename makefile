@@ -1,7 +1,7 @@
 CC = gcc
 CFLAGS = -g -c -Wall
 OBJ = bst.o BSTv1.o helpers.o BSTv2.o BSTv3.o BSTv4.o \
- wrappers.o producerConsumer1.o
+ wrappers.o producerConsumer1.o	
 
 .c.o:
 	$(CC) $(CFLAGS) $< -o $@

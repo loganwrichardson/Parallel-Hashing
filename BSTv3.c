@@ -100,10 +100,21 @@ void BSTv3Insert(int value)
 void * doInsert(void * arg)
 {
    int i;
-   while((i = consume1())!= -1)
+   int which = *(int*)arg;
+   /*while((i = consume1())!= -1)
    {
       //insert each value
       BSTv3Insert(i);
+   }*/
+   if (which == PC1) {
+      while((i = consume1()) != -1) {
+         //insert each value
+         BSTv3Insert(i);
+      }
+   }
+   else if (which == PC2) {
+       /*while((i = consume2())!= -1){
+         BSTv3Insert(i);*/
    }
    
    return NULL;
@@ -123,7 +134,9 @@ double doBSTv3(int * sortedInput, int size, int numThreads, int which)
    pthread_t threads[numThreads];
    for (i = 0; i < numThreads; i++)
    {
-      Pthread_create(&threads[i], NULL, doInsert, NULL);
+      int* whichPtr = (int*)Malloc(sizeof(int));
+      *whichPtr = which;
+      Pthread_create(&threads[i], NULL, doInsert, whichPtr);
    }
    
    for (i = 0; i < numThreads; i++)

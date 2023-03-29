@@ -86,12 +86,27 @@ void BSTv2Insert(int value)
 void * doInsert(void *arg)
 {
    int i;
-    while((i = consume1())!= -1)
+   int which = *(int*)arg;
+   /*while((i = consume1())!= -1)
    {
       Pthread_mutex_lock(&tree_lock);
       BSTv2Insert(i);
       Pthread_mutex_unlock(&tree_lock);
-   } 
+   }*/
+   if (which == PC1) {
+      while((i = consume1()) != -1) {
+         //insert each value
+         Pthread_mutex_lock(&tree_lock);
+         BSTv2Insert(i);
+         Pthread_mutex_unlock(&tree_lock);
+      }
+   }
+   else if (which == PC2) {
+       /*while((i = consume2())!= -1){
+         Pthread_mutex_lock(&tree_lock);
+         BSTv2Insert(i);
+         Pthread_mutex_unlock(&tree_lock);*/
+   }
     return NULL;
 }
 
@@ -111,7 +126,9 @@ double doBSTv2(int * sortedInput, int size, int numThreads, int which)
    TIMERSTART(BSTV2)
    pthread_t threads[numThreads];
    for(i = 0; i< numThreads; i++){
-      Pthread_create(&threads[i], NULL, doInsert, NULL);
+      int* whichPtr = (int*)Malloc(sizeof(int));
+      *whichPtr = which;
+      Pthread_create(&threads[i], NULL, doInsert, whichPtr);
    }
 
    // unlock tree after all threads are done
