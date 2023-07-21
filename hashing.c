@@ -92,6 +92,34 @@ void remove(struct Data * value) {
 
 }
 
+//struct node * find(int key) {
+//    int hashIndex = hashFunct(key);
+//
+//    while(HashTable->entries[hashIndex] != NULL) {
+//        if(hashArray[hashIndex]->key == key)
+//            return hashArray;
+//    }
+//}
+
+/**
+ * Find the value according to key in the hash table.
+ * Returns -1 if the key is not found, otherwise returns the value associated with the key.
+ */
+int find(int key, linked_list hash_table) {
+        int index = hash_func(key);
+
+        //TODO: refactor the hash_table->entries
+        node * current = hash_table->entries[index];
+
+        while(current != NULL){
+            if (current-> key == key){
+                return current->value;
+            }
+            current = current-> next;
+        }
+        return -1; // Key not found//
+}
+
 void display() {
 
 }
