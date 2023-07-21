@@ -49,6 +49,12 @@ struct Data * find(int key) {
     }
 }
 
+/**
+ * Insert.
+ * Inserts an entry into the hash table.
+ * @param key: int
+ * @param data: struct
+ */
 void insert(int key, int data) {
 
     struct Data *item
@@ -75,6 +81,24 @@ void initHashTable(HashTable* table) {
     }
 }
 
+/**
+ * Remove.
+ * Removes an entry from the hash table.
+ * @param value: struct Data
+ */
+void remove(struct Data * value) {
+    int key = value->key;
+    int hashIndex = hashFunct(key);
+
+}
+
+void display() {
+
+}
+
+int main() {
+
+}
 
 
 
