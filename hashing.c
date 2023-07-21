@@ -80,7 +80,7 @@ void insert(int key, int data) {
     int hash_index = hash_func(key);
 
     // Store the linked list from the hash table index
-    linked_list * list = (struct node *) array[index].head;
+    linked_list list = (struct node *) array[index].head;
 
     node * temp = (struct node *) malloc(sizeOf(struct node));
     temp->key = key;
@@ -163,7 +163,7 @@ int find(int key, linked_list hash_table) {
             if (current-> key == key){
                 return current->value;
             }
-            current = current-> next;
+            current = current->next;
         }
         return -1; // Key not found//
 }
