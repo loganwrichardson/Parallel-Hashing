@@ -54,6 +54,27 @@ void insert(int key, int data) {
     struct Data *item
 }
 
+// Insert an element into the hash table using linear probing for collisions.
+void insertHashTable(HashTable* table, int key, int val) {
+    int index = hashFunc(key);
+
+    while (table->entries[index].key != -1) {
+        index = (index + 1) % HASH_TABLE_SIZE; // Linear probing
+    }
+
+    table->entries[index].key = key;
+    table->entries[index].value = value;
+}
+
+/**
+ * To initiaze the hash table
+ */
+void initHashTable(HashTable* table) {
+    for (int i = 0; i < HASH_TABLE_SIZE; i++) {
+        table->entries[i].key = -1;
+    }
+}
+
 
 
 
