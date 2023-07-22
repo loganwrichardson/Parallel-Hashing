@@ -1,4 +1,11 @@
-// Created by Logan Richardson and Vidhi Patel on 7/20/23.
+/**
+ * Created by Logan Richardson and Vidhi Patel
+ * @version 1.0
+ * @date 7/20/23
+ *
+ * This program hashes data using a universal hashing algorithm
+ * and resolves collisions with linked list chaining.
+ */
 
 #include "helpers.h"
 #include "macros.h"
@@ -14,13 +21,11 @@
 
 // Number of values to insert
 #define NUM_NODES 1000
-
 // Size of the hash table: NUM_NODES squared
 int hash_table_size = NUM_NODES * NUM_NODES;
 
 /**
- * Node for storing each data point
- * Uses linked list chaining to resolve collisions
+ * Node structure for storing each data point
  * key: the hash key for the data point
  * value: the data to be stored
  * node * next: next node for the linked list, null if not needed
@@ -33,7 +38,7 @@ typedef struct node_t {
 
 /**
  * Structure for creating a linked list
- * Uses: hash table and chaining (collision resolution)
+ * Used for the outer level hash table as well as node chaining
  */
 typedef struct linked_list_t {
     // The head of the linked list
@@ -50,10 +55,37 @@ int size = 0;
 int max = 10;
 
 // Function Declarations
+node_t create_node(int key, int data);
+void init_hash_table();
+int hash_func(int key);
 void insert(int key, int data);
 void remove(int key);
 int find(int key, linked_list hash_table);
-void init_hash_table();
+
+/**
+ * Creates a node for insertion into the hash table
+ * @param key: int
+ * @param value: int
+ * @return node_t
+ */
+node_t create_node(int key, int data) {
+    node * temp = (struct node *) malloc(sizeOf(struct node));
+    temp->key = key;
+    temp->value = data;
+    temp->next = NULL;
+    return temp;
+}
+
+/**
+ * Initialize the hash table
+ */
+void init_hash_table() {
+    int k = 0;
+    for (k = 0; k < hash_table_size; k++) {
+        hash_table[k].head = NULL;
+        hash_table[k].tail = NULL;
+    }
+}
 
 /**
  * Universal Hash Function
@@ -69,40 +101,35 @@ int hash_func(int key) {
  * Insert
  * Inserts an entry into the hash table.
  * @param key: int
- * @param data: struct
+ * @param data: struct node_t
  */
 void insert(int key, int data) {
-
     // Keeps track of if you need to rehash
     float n = 0.0;
-
     // Find the hash index.
     int hash_index = hash_func(key);
-
     // Store the linked list from the hash table index
-    linked_list list = (struct node *) array[index].head;
+    linked_list list = (struct node *) hash_table[hash_index].head;
 
-    node * temp = (struct node *) malloc(sizeOf(struct node));
-    temp->key = key;
-    temp->value = data;
-    temp->next = NULL;
+    node * temp = create_node(key, data);
 
     if (list == NULL) {
         // No linked list is present at the node.
-        hash_array[hash_index].head = temp;
-        hash_array[hash_index].tail = temp;
+        hash_table[hash_index].head = temp;
+        hash_table[hash_index].tail = temp;
         size++;
     }
     else {
         // There is a linked list present at the hash table node
-        int find_index = find(key, *list);
+        int find_index = find(key,*list);
         if (find_index == -1) {
             // The key is not already present in the chaining linked list
-            hash_array[index].tail->next = temp;
-            hash_array[index].tail = temp;
+            hash_table[hash_index].tail->next = temp;
+            hash_table[hash_index].tail = temp;
             size + ;
-        } else {
-            // The key is present in the chaining linked list
+        }
+        else {
+            // There is a linked list at the hashed node
             // Update the value of the existing key
             //TODO: consider ... is this the best thing to do here?
             //TODO: will this just overwrite the existing node?
@@ -120,47 +147,77 @@ void insert(int key, int data) {
 }
 
 /**
- * Initialize the hash table
+ * Remove
+ * Removes an entry from the hash table.
+ * @param value: struct node_t
  */
-void init_hash_table() {
-    int k = 0;
-    for (k = 0; k < hash_table_size; k++) {
-        hash_table[k].head = NULL;
-        hash_table[k].tail = NULL;
+void remove(int key) {
+    // Hash the key
+    int hash_index = hash_func(key);
+    // Copy the linked list at the hash table index
+    linked_list list = (struct node*) hash_table[hash_index].head;
+
+    if (list == NULL) {
+        // There is no linked list at the hash table index.
+        printf("The node indexed by the key: %d does not exist in the hash table.\n", key);
+    }
+    else {
+        /**
+         * There is a linked list at the hash table index.
+         * Search the linked list for the node.
+         */
+        int find_index = find(key, list);
+        if (find_index == -1) {
+            // The key is not present in the linked list.
+            printf("The node indexed by the key: %d does not exist in the hash table.\n", key);
+        }
+        else {
+            // The key is present in the linked list.
+            node temp = list;
+            if (temp->key == key) {
+                // Remove the node from the chaining list.
+                hash_table[hash_index].head = temp->next;
+                // Free the memory space used by temp
+                free(temp);
+                printf("The node indexed by the key: %d has been removed.\n", key);
+                return;
+            }
+
+            while (temp->next->key != key) {
+                //Scan through the linked list while checking the key of next node
+                temp = temp->next;
+            }
+
+            if (hash_table[hash_index]).tail = temp->next) {
+                // Remove the node by setting temp->next to null
+                temp->next = NULL;
+                hash_table[hash_index].tail = temp;
+            }
+            else {
+                //TODO: check to make sure this is really eliminating the node from the hash table
+                temp->next = temp->next->next;
+            }
+            //TODO: Might need to free temp here
+            //free(temp)
+            printf("The node indexed by the key: %d has been removed.\n", key);
+        }
     }
 }
 
 /**
- * Remove
- * Removes an entry from the hash table.
- * @param value: struct Data
- */
-void remove(struct node * value) {
-    int key = value->key;
-    int hashIndex = hash_func(key);
-}
-
-//struct node * find(int key) {
-//    int hashIndex = hashFunct(key);
-//
-//    while(HashTable->entries[hashIndex] != NULL) {
-//        if(hashArray[hashIndex]->key == key)
-//            return hashArray;
-//    }
-//}
-
-/**
  * Find the value according to key in the hash table.
+ * @param key: int
+ * @param hash_table: struct linked_list_t
  * Returns -1 if the key is not found, otherwise returns the value associated with the key.
  */
 int find(int key, linked_list hash_table) {
-        int index = hash_func(key);
+        int hash_index = hash_func(key);
 
         //TODO: refactor the hash_table->entries
-        node * current = hash_table->entries[index];
+        node current = hash_table->entries[hash_index];
 
         while(current != NULL){
-            if (current-> key == key){
+            if (current->key == key){
                 return current->value;
             }
             current = current->next;
