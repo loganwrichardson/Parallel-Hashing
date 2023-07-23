@@ -52,35 +52,23 @@ struct hash_table_item *hash_table;
 // Number of nodes in the hash table
 int size = 0;
 // Maximum size of the chaining (collision resolution) array
-int max = 10;
+int max = 1000;
 
 // Function Declarations
 void init_hash_table();
 int hash_func(int key);
-void insert(int key, int data);
+struct node* get_element(struct node *list, int find_index);
+void insert(int key, int value);
+void rehash();
 void remove_node(int key);
 int find(int key, struct node *list);
-
-/**
- * Creates a node for insertion into the hash table
- * @param key: int
- * @param value: int
- * @return node_t
- */
-//struct node_t * create_node(int key, int data) {
-//    struct node_t *temp = malloc(sizeof(struct node_t));
-//    temp->key = key;
-//    temp->value = data;
-//    temp->next = NULL;
-//    return temp;
-//}
 
 /**
  * Initialize the hash table
  */
 void init_hash_table() {
     int k = 0;
-    for (k = 0; k < HASH_TABLE_SIZE; k++) {
+    for (k = 0; k < max; k++) {
         hash_table[k].head = NULL;
         hash_table[k].tail = NULL;
     }
@@ -114,7 +102,7 @@ struct node* get_element(struct node *list, int find_index) {
  */
 void insert(int key, int value) {
     // Keeps track of if you need to rehash
-    float n = 0.0;
+    double n;
     // Find the hash index.
     int hash_index = hash_func(key);
     // Store the linked list from the hash table index
@@ -149,13 +137,54 @@ void insert(int key, int value) {
             element->value = value;
         }
     }
-    //TODO: refactor this
-    //TODO: consider -- maybe we don't need this functionality
+//    //TODO: refactor this
+//    //TODO: consider -- maybe we don't need this functionality
 //    n = (1.0 * size) / max;
 //    if (n >= 0.75) {
 //        // rehashing
 //        rehash();
 //    }
+}
+
+void rehash() {
+    struct hash_table_item *temp = hash_table;
+    /** temp pointing to the current Hash Table array */
+
+    int i = 0, n = max;
+    size = 0;
+    max = 2 * max;
+
+    /**
+     *array variable is assigned with newly created Hash Table
+     *with double of previous array size
+    */
+
+    hash_table = (struct hash_table_item*) malloc(max * sizeof(struct node));
+    init_hash_table();
+
+    for (i = 0; i < n; i++) {
+        /* Extracting the Linked List at position i of Hash Table array */
+
+        struct node* list = (struct node*) temp[i].head;
+        if (list == NULL) {
+            /* if there is no Linked List, then continue */
+
+            continue;
+        }
+        else {
+            /**
+             *Presence of Linked List at i
+             *Keep moving and accessing the Linked List item until the end.
+             *Get one key and value at a time and add it to new Hash Table array.
+            */
+
+            while (list != NULL) {
+                insert(list->key, list->value);
+                list = list->next;
+            }
+        }
+    }
+    temp = NULL;
 }
 
 /**
@@ -240,13 +269,38 @@ int find(int key, struct node* list) {
 }
 
 void display() {
+    int i = 0;
+    for (i=0; i < max; i++) {
+        struct node *temp = hash_table[i].head;
+        if (temp == NULL) {
+            printf("hash_table[%d] has not elements\n", i);
+        }
+        else {
+            printf("hash_table[%d] has elements: ", i);
+            while (temp != NULL) {
+                printf("key = %d value =%d\t", temp->key, temp->value);
+                temp = temp->next;
+            }
+            printf("\n");
+        }
+    }
 
 }
 
-void main() {
-    int key = 10;
-    int data = 500;
+int main() {
+    int choice, key, value, n, c;
 
+    key = 10;
+    value = 20;
+    hash_table = (struct hash_table_item*) malloc(max * sizeof(struct hash_table_item*));
+    init_hash_table();
+    int i = 0;
+    for (i=0; i < 100; i++) {
+        key++;
+        value++;
+        insert(key, value);
+    }
+    display();
 }
 
 
