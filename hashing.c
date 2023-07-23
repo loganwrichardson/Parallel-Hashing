@@ -52,27 +52,16 @@ struct hash_table_item *hash_table;
 // Number of nodes in the hash table
 int size = 0;
 // Maximum size of the chaining (collision resolution) array
-int max = 1000;
+int max = 10;
 
-// Function Declarations
-void init_hash_table();
-int hash_func(int key);
-struct node* get_element(struct node *list, int find_index);
-void insert(int key, int value);
-void rehash();
-void remove_node(int key);
-int find(int key, struct node *list);
-
-/**
- * Initialize the hash table
- */
-void init_hash_table() {
-    int k = 0;
-    for (k = 0; k < max; k++) {
-        hash_table[k].head = NULL;
-        hash_table[k].tail = NULL;
-    }
-}
+//// Function Declarations
+//void init_hash_table();
+//int hash_func(int key);
+//struct node* get_element(struct node *list, int find_index);
+//void insert(int key, int value);
+//void rehash();
+//void remove_node(int key);
+//int find(int key, struct node *list);
 
 /**
  * Universal Hash Function
@@ -102,19 +91,20 @@ struct node* get_element(struct node *list, int find_index) {
  */
 void insert(int key, int value) {
     // Keeps track of if you need to rehash
-    double n;
+    double n = 0.0;
     // Find the hash index.
     int hash_index = hash_func(key);
     // Store the linked list from the hash table index
     struct node *list = (struct node*) hash_table[hash_index].head;
-
     struct node *item = (struct node*) malloc(sizeof(struct node));
+
     item->key = key;
     item->value = value;
     item->next = NULL;
 
     if (list == NULL) {
         // No linked list is present at the node.
+        printf("Inserting %d(key) and %d(value) \n", key, value);
         hash_table[hash_index].head = item;
         hash_table[hash_index].tail = item;
         size++;
@@ -137,13 +127,14 @@ void insert(int key, int value) {
             element->value = value;
         }
     }
-//    //TODO: refactor this
-//    //TODO: consider -- maybe we don't need this functionality
-//    n = (1.0 * size) / max;
-//    if (n >= 0.75) {
-//        // rehashing
-//        rehash();
-//    }
+    //TODO: refactor this
+    //TODO: consider -- maybe we don't need this functionality
+    n = (1.0 * size) / max;
+    if (n >= 0.75) {
+        // rehashing
+        printf("going to rehash\n");
+        rehash();
+    }
 }
 
 void rehash() {
@@ -251,7 +242,7 @@ void remove_node(int key) {
  * @param hash_table: struct linked_list_t
  * Returns -1 if the key is not found, otherwise returns the value associated with the key.
  */
-int find(int key, struct node* list) {
+int find(int key, struct node *list) {
         int hash_index = hash_func(key);
 
         int retval = 0;
@@ -284,12 +275,24 @@ void display() {
             printf("\n");
         }
     }
+}
 
+/**
+ * Initialize the hash table
+ */
+void init_hash_table() {
+    int k = 0;
+    for (k = 0; k < max; k++) {
+        hash_table[k].head = NULL;
+        hash_table[k].tail = NULL;
+    }
 }
 
 int main() {
-    int choice, key, value, n, c;
-
+    int choice, n, c;
+    //struct hash_table_item * hash_table;
+    int key = 0;
+    int value = 0;
     key = 10;
     value = 20;
     hash_table = (struct hash_table_item*) malloc(max * sizeof(struct hash_table_item*));
