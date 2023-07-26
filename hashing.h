@@ -1,17 +1,25 @@
 //
-// Created by lwrdev on 7/20/23.
+// Created by Logan Richardson on 7/20/23.
 //
+//#ifndef COMPREHENSIVE_VIDHI_AND_LOGAN_HASING_H
+//#define COMPREHENSIVE_VIDHI_AND_LOGAN_HASING_H
 
-#ifndef COMPREHENSIVE_VIDHI_AND_LOGAN_HASING_H
-#define COMPREHENSIVE_VIDHI_AND_LOGAN_HASING_H
+#ifndef HASHING_H
+#define HASHING_H
+#include "linked_list.h"
 
-#endif //COMPREHENSIVE_VIDHI_AND_LOGAN_HASING_H
+typedef struct HashTable_t {
+    LinkedList **table;
+    int capacity;
+} HashTable;
 
 // Function Declarations
-void init_hash_table();
+HashTable* hash_table_create(int capacity);
+void ht_destroy(HashTable *ht);
 int hash_func(int key);
-struct node* get_element(struct node *list, int find_index);
-void insert(int key, int value);
-void rehash();
-void remove_node(int key);
-int find(int key, struct node *list);
+void hash_table_insert(HashTable *ht, int data);
+void hash_table_remove(HashTable *ht, int data);
+void hash_table_print(HashTable *ht);
+
+#endif
+//#endif //COMPREHENSIVE_VIDHI_AND_LOGAN_HASING_H
