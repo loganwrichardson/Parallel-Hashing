@@ -240,7 +240,7 @@ void printUsage()
  * 0 and (size * 2)-1 [inclusive]. Fills the nums array
  * with those values.
  */
-void makeInput(int * nums, int size)
+void makeInput(int * nums, t4int size)
 {
    int used[size << 1];
    int i, j;

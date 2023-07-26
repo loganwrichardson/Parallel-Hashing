@@ -4,7 +4,7 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include"linked_list.h"
+#include "linked_list.h"
 
 Node* node_create(int data, Node *next) {
     Node *n = calloc(1, sizeof *n);
@@ -29,9 +29,14 @@ void linked_list_destroy(LinkedList *list) {
     return;
 }
 
-void linked_linked_insert(LinkedList *list, int data) {
+void linked_list_insert(LinkedList *list, int data) {
     Node *new_node = node_create(data, NULL);
-    new_node->next = list->head;
+    if (list->size > 0) {
+        new_node->next = list->head;
+    }
+    else {
+        new_node->next = NULL;
+    }
     list->head = new_node;
     list->size++;
     return;
@@ -66,12 +71,16 @@ void linked_list_remove(LinkedList *list, int data) {
 void linked_list_print(LinkedList *list) {
     printf("Print linked list (%d items: ", list->size);
     Node *cur_node = list->head;
-    while (cur_node != NULL) {
-        if (cur_node->next != NULL) {
-            printf("%d, ", cur_node->data);
-        } else {
-            printf("%d\n", cur_node->data);
+    if (cur_node == NULL) {
+        printf(")\n");
+    } else {
+        while (cur_node != NULL) {
+            if (cur_node->next != NULL) {
+                printf("%d, ", cur_node->data);
+            } else {
+                printf("%d)\n", cur_node->data);
+            }
+            cur_node = cur_node->next;
         }
-        cur_node = cur_node->next;
     }
 }

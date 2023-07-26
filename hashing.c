@@ -29,10 +29,10 @@ HashTable* hash_table_create(int capacity) {
     // Sets the hash table capacity
     ht->capacity = capacity;
     // allocates memory for the number of linked lists
-    ht->table = calloc(capacity, sizeof *(ht->table));
+    ht->table = calloc(ht->capacity, sizeof *(ht->table));
     // allocate memory for each linked list in the array
 
-    for(i=0; i < capacity; i++){
+    for(i=0; i < ht->capacity; i++){
         ht->table[i] = linked_list_create();
     }
 
@@ -71,5 +71,6 @@ void hash_table_print(HashTable *ht) {
     }
     return;
 }
+
 
 

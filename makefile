@@ -21,12 +21,22 @@ BSTv4.o: BSTv4.c helpers.h macros.h
 
 helpers.o: helpers.c helpers.h
 
-wrappers.o: wrappers.h wrappers.c
+wrappers.o: wrappers.c wrappers.h
 
-producerConsumer1.o:	producerConsumer1.h	producerConsumer1.c
+producerConsumer1.o: producerConsumer1.c producerConsumer1.h
 
-producerConsumer2.o:	producerConsumer2.h producerConsumer2.c
+producerConsumer2.o: producerConsumer2.c producerConsumer2.h
+
+hashing.o: hashing.c hashing.h linked_list.h
+
+linked_list.o: linked_list.c linked_list.h
+
+main.o: main.c linked_list.h hashing.h
+
+main: main.o linked_list.o hashing.o
+	$(CC) -o test_structs $^
 
 clean:
 	rm *.o
 	rm bst
+	rm a.out
