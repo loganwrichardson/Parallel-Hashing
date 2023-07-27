@@ -2,9 +2,6 @@
 // Created by Logan Richardson on 7/25/23.
 //
 
-//#ifndef COMPREHENSIVE_VIDHI_AND_LOGAN_LINKED_LIST_H
-//#define COMPREHENSIVE_VIDHI_AND_LOGAN_LINKED_LIST_H
-
 #ifndef LINKED_LIST_H
 #define LINKED_LIST_H
 
@@ -38,4 +35,3 @@ void linked_list_remove(LinkedList *list, int data);
 void linked_list_print(LinkedList *list);
 
 #endif
-//#endif //COMPREHENSIVE_VIDHI_AND_LOGAN_LINKED_LIST_H

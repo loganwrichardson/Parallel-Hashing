@@ -13,7 +13,7 @@
 #include "producerConsumer1.h"
 #include "producerConsumer2.h"
 #include "BSTversions.h"
-#include "hashing.h"
+#include "hash_table.h"
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
@@ -46,20 +46,20 @@ HashTable* hash_table_create(int capacity) {
  * @param key: int
  * @return int
  */
-int hash_func(int key) {
-    return (int)((2971 * key + 101923) % 128189) % HASH_TABLE_SIZE;
+int hash_func(HashTable *ht, int key) {
+    return (int)((2971 * key + 101923) % 128189) % ht->capacity;
 }
 
 void hash_table_insert(HashTable * ht, int data) {
     // Get the hash key
-    int key = hash_func(data);
+    int key = hash_func(ht, data);
     // Insert the data
     linked_list_insert(ht->table[key], data);
     return;
 }
 
 void hash_table_remove(HashTable *ht, int data) {
-    int key = hash_func(data);
+    int key = hash_func(ht, data);
     linked_list_remove(ht->table[key], data);
 }
 

@@ -7,6 +7,7 @@
 //TODO
 //uncomment this when ready
 #include "producerConsumer2.h"
+#include "hash_table.h"
 
 //static makes these local to this file
 static void makeInput(int * nums, int size);
@@ -20,9 +21,11 @@ static void runBSTWithProducerConsumer1(int * input, int * sortedInput,
 static void runBSTWithProducerConsumer2(int * input, int * sortedInput,
                                         int size, int numConsume,
                                         int numProduce, int which);
+static void runHashingWithProducerConsumer1(int * input, int * sortedInput, int size,
+                               int numConsume, int numProduce, int which);
 
 //default tree size and default number of threads
-#define SIZE_DEFAULT 1000
+#define SIZE_DEFAULT 5000
 #define NUMCONSUME_DEFAULT 4
 #define NUMPRODUCE_DEFAULT 4
 
@@ -44,15 +47,18 @@ int main(int argc, char * argv[])
    //sort the input to check for correctness
    sortInput(sortedInput, size);
 
-   //ProducerConsumer1 is implemented using semaphores
-   runBSTWithProducerConsumer1(input, sortedInput, size,
-                               numConsume, numProduce, PC1);
+//   //ProducerConsumer1 is implemented using semaphores
+//   runBSTWithProducerConsumer1(input, sortedInput, size,
+//                               numConsume, numProduce, PC1);
+//
+//   //ProducerConsumer2 is implemented using Condition Variables
+//   //TODO
+//   //uncomment this when ready
+//   runBSTWithProducerConsumer2(input, sortedInput, size,
+//                              numConsume, numProduce, PC2);
 
-   //ProducerConsumer2 is implemented using Condition Variables
-   //TODO
-   //uncomment this when ready
-   runBSTWithProducerConsumer2(input, sortedInput, size,
-                              numConsume, numProduce, PC2);
+    runHashingWithProducerConsumer1(input, sortedInput, size,
+                               numConsume, numProduce, PC1);
    return 0;
 }
 
@@ -154,6 +160,103 @@ void runBSTWithProducerConsumer2(int * input, int * sortedInput, int size,
 }
 
 /*
+ * runBSTWithProducerConsumer1
+ * Build the BST using a producer-consumer that is implemented using
+ * semaphores.
+ * input - values to insert into BST (provided to producer)
+ * sortedInput - sorted input to check for correctness
+ *  (provided to consumer, which is the BST implementation)
+ * size - length of the input and sortedInput arrays
+ * numConsume - number of threads created to inserted into BST
+ * numProduce - number of threads that will be used to fill the
+ *  producer-consumer buffer
+ * which - which producer-consumer to use
+*/
+void  runHashingWithProducerConsumer1(int * input, int * sortedInput, int size,
+                                 int numConsume, int numProduce, int which)
+{
+    double treeTime;
+
+    printf("\nUsing %d threads to produce data for each Hash Table.\n",
+           numProduce);
+    printf("Producer/consumer implemented using semaphores.\n");
+
+    printf("\nBuilding trees with 1 thread.\n");
+    createProducers1(input, size, numProduce);
+    treeTime = doHTv1(sortedInput, size, which);
+    joinProducers1();
+    printf("Time: %f sec\n", treeTime);
+
+    printf("\nBuilding trees with %d threads and one lock per Hash Table.\n", numConsume);
+    createProducers1(input, size, numProduce);
+    treeTime = doHTv2(sortedInput, size, numConsume, which);
+    joinProducers1();
+    printf("Time: %f sec\n", treeTime);
+//
+//    printf("\nBuilding trees with %d threads and one lock per node.\n", numConsume);
+//    createProducers1(input, size, numProduce);
+//    treeTime = doBSTv3(sortedInput, size, numConsume, which);
+//    joinProducers1();
+//    printf("Time: %f sec\n", treeTime);
+
+//    printf("\nBuilding trees with %d threads and no locks.\n", numConsume);
+//    createProducers1(input, size, numProduce);
+//    treeTime = doBSTv4(sortedInput, size, numConsume, which);
+//    joinProducers1();
+//    printf("Time: %f sec\n", treeTime);
+}
+
+/*
+ * runBSTWithProducerConsumer2
+ * Build the BST using a producer-consumer that is implemented using
+ * condition variables.
+ * input - values to insert into BST (provided to producer)
+ * sortedInput - sorted input to check for correctness
+ *  (provided to consumer, which is the BST implementation)
+ * size - length of the input and sortedInput arrays
+ * numConsume - number of threads created to inserted into BST
+ * numProduce - number of threads that will be used to fill the
+ *  producer-consumer buffer
+ * which - which producer-consumer to use
+*/
+void runHashingWithProducerConsumer2(int * input, int * sortedInput, int size,
+                                 int numConsume, int numProduce, int which)
+{
+    double treeTime;
+
+    printf("\nUsing %d threads to produce data for each BST.\n",
+           numProduce);
+    printf("Producer/consumer implemented using condition variables.\n");
+
+    printf("\nBuilding trees with 1 thread.\n");
+    createProducers2(input, size, numProduce);
+    treeTime = doBSTv1(sortedInput, size, which);
+    joinProducers2();
+    printf("Time: %f sec\n", treeTime);
+
+    printf("\nBuilding trees with %d threads and one lock per tree.\n",
+           numConsume);
+    createProducers2(input, size, numProduce);
+    treeTime = doBSTv2(sortedInput, size, numConsume, which);
+    joinProducers2();
+    printf("Time: %f sec\n", treeTime);
+
+    printf("\nBuilding trees with %d threads and one lock per node.\n",
+           numConsume);
+    createProducers2(input, size, numProduce);
+    treeTime = doBSTv3(sortedInput, size, numConsume, which);
+    joinProducers2();
+    printf("Time: %f sec\n", treeTime);
+
+    printf("\nBuilding trees with %d threads and no locks.\n", numConsume);
+    createProducers2(input, size, numProduce);
+    treeTime = doBSTv4(sortedInput, size, numConsume, which);
+    joinProducers2();
+    printf("Time: %f sec\n", treeTime);
+
+}
+
+/*
  * getArgs
  * Parse the command line arguments to get the number of values
  * to insert into the BST, the number of consumer threads, and the
@@ -240,7 +343,7 @@ void printUsage()
  * 0 and (size * 2)-1 [inclusive]. Fills the nums array
  * with those values.
  */
-void makeInput(int * nums, t4int size)
+void makeInput(int * nums, int size)
 {
    int used[size << 1];
    int i, j;
