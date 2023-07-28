@@ -1,6 +1,7 @@
 //
-// Created by Logan Richardson on 7/27/23.
+// Created by Logan Richardson and Vidhi Patel on 7/27/23.
 //
+#include <stdio.h>
 #include <stdlib.h>
 #include <semaphore.h>
 #include "helpers.h"
@@ -25,6 +26,7 @@ double doHTv1(int * sortedInput, int size, int which)
 
     TIMERSTART(HTv1)
 
+    int * input = malloc(sizeof(int) * size);
     if (which == PC1) {
         while((i = consume1()) != -1) {
             //insert each value - Takes the place of BSTv1Insert

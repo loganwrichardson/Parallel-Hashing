@@ -1,5 +1,5 @@
 //
-// Created by Logan Richardson on 7/20/23.
+// Created by Logan Richardson and Vidhi Patel on 7/20/23.
 //
 //#ifndef COMPREHENSIVE_VIDHI_AND_LOGAN_HASING_H
 //#define COMPREHENSIVE_VIDHI_AND_LOGAN_HASING_H
@@ -27,8 +27,12 @@ int hash_func(HashTable *ht, int key);
 void hash_table_insert(HashTable *ht, int data);
 void hash_table_remove(HashTable *ht, int data);
 void hash_table_print(HashTable *ht);
-double doHTv1(int * sortedInput, int size, int which);
-double doHTv2(int * sortedInput, int size, int numThreads, int which);
+void HSTv1GetNums(HashTable * ht, int * array);
+//void HSTv2GetNums(int * array);
+//void HSTv3GetNums(int * array);
+//void HSTv4GetNums(int * array);
+int cmpfc(const void* a, const void* b);
+void inorder_ht(HashTable * ht, int * array);
 
 #endif
 //#endif //COMPREHENSIVE_VIDHI_AND_LOGAN_HASING_H

@@ -8,6 +8,7 @@
 //uncomment this when ready
 #include "producerConsumer2.h"
 #include "hash_table.h"
+#include"hashingversions.h"
 
 //static makes these local to this file
 static void makeInput(int * nums, int size);

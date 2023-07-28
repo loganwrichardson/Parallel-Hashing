@@ -4,7 +4,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
-#include "hashing.h"
+#include <string.h>
+#include "hash_table.h"
 #include "linked_list.h"
 
 void test_hash_table();
