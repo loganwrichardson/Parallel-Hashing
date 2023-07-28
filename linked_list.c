@@ -76,7 +76,7 @@ void linked_list_print(LinkedList *list) {
     } else {
         while (cur_node != NULL) {
             if (cur_node->next != NULL) {
-                printf("%d, ", cur_node->data);
+                printf("%d, \n", cur_node->data);
             } else {
                 printf("%d)\n", cur_node->data);
             }

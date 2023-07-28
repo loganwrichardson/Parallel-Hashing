@@ -19,8 +19,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 
-#define HASH_TABLE_SIZE 1000
-
 HashTable* hash_table_create(int capacity) {
     int i;
 

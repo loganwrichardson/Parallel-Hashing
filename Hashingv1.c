@@ -11,15 +11,14 @@
 #include "BSTversions.h"
 #include "hash_table.h"
 
-
-//Build the BST using just one thread (the calling thread).
+//Build the Hash Table using just one thread (the calling thread).
 //Check for correctness.
 //Return the time it takes to do it.
 //double doBSTv1(int * input, int * sortedInput, int size)
 double doHTv1(int * sortedInput, int size, int which)
 {
     int i;
-    int treeValues[size];
+    int hashValues[size];
     // Takes the place of resetBSTv1
     HashTable * temp = hash_table_create(size);
 
@@ -38,6 +37,8 @@ double doHTv1(int * sortedInput, int size, int which)
         }
     }
 
+    HSTv1GetNums(temp, hashValues);
+
     //get the values
     // Takes the place of BSTv1GetNums & inorder
     hash_table_print(temp);
@@ -47,6 +48,41 @@ double doHTv1(int * sortedInput, int size, int which)
     double treeTime = DURATION(HTv1)
 
     //check for correctness
-    compare(sortedInput, treeValues, size);
+    compare(sortedInput, hashValues, size);
     return treeTime;
+}
+
+void HSTv1GetNums(HashTable * ht, int * array)
+{
+    inorder_ht(ht, array);
+}
+
+int cmpfc(const void* a, const void* b) {
+    return (*(int*)a-*(int*)b);
+}
+
+void (*cmpfc_ptr) = &cmpfc;
+
+void inorder_ht(HashTable * ht, int * array)
+{
+    //TODO
+    if(ht == NULL)
+    {
+        return;
+    }
+    int i = 1;
+    int size = HASH_TABLE_SIZE;
+    while (ht->table[i] != NULL) {
+        while (ht->table[i]->head != NULL) {
+            array[i] = ht->table[i]->head->data;
+            ht->table[i]->head = ht->table[i]->head->next;
+        }
+        i++;
+    }
+
+    qsort(array, size, sizeof(int), cmpfc_ptr);
+
+//    inorder(ptr->left, array);
+//    array[array_index++] = ptr->val;
+//    inorder(ptr->right, array);
 }

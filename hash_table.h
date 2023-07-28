@@ -6,12 +6,19 @@
 
 #ifndef HASHING_H
 #define HASHING_H
+#define HASH_TABLE_SIZE 1000
 #include "linked_list.h"
 
 typedef struct HashTable_t {
     LinkedList **table;
     int capacity;
 } HashTable;
+
+typedef struct HashTable_With_Locks_t {
+    LinkedList **table;
+    int capacity;
+    pthread_mutex_t lock;
+} HashTable_with_locks;
 
 // Function Declarations
 HashTable* hash_table_create(int capacity);

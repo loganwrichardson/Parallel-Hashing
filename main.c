@@ -128,55 +128,7 @@ void sortInput(int * nums, int size)
  * numProduce - pointer to the int to be set to the number of
  *        producer threads to fill the producer-consumer buffer
  */
-void getArgs(int argc, char * argv[], int * size,
-             int * numConsume, int * numProduce)
-{
-    char opt;
-    (*size) = SIZE_DEFAULT;
-    (*numConsume) = NUMCONSUME_DEFAULT;
-    (*numProduce) = NUMPRODUCE_DEFAULT;
-    while((opt = getopt(argc, argv, "s:c:p:h")) != -1)
-    {
-        switch (opt)
-        {
-            case 'c':
-                //number of consumers
-                (*numConsume) = atoi(optarg);
-                if ((*numConsume) <= 1)
-                {
-                    fprintf(stderr, "bad -c option: Number of ");
-                    fprintf(stderr, "consumer threads needs to be > 1\n");
-                    printUsage();
-                }
-                break;
-            case 'p':
-                //number of producers
-                (*numProduce) = atoi(optarg);
-                if ((*numProduce) <= 1)
-                {
-                    fprintf(stderr, "bad -p option: Number of ");
-                    fprintf(stderr, "producer threads needs to be > 1\n");
-                    printUsage();
-                }
-                break;
-            case 's':
-                (*size) = atoi(optarg);
-                if ((*size) <= 0)
-                {
-                    fprintf(stderr, "bad -s option: Number of ");
-                    fprintf(stderr, "values to insert needs to be > 0\n");
-                    printUsage();
-                }
-                break;
-            case 'h':
-                printUsage();
-            case '?':
-                printUsage();
-
-        }
-    }
-}
-
+//
 /*
  * printUsage
  * Print the usage information and exit
