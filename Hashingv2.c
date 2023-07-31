@@ -16,11 +16,14 @@
 pthread_mutex_t hash_lock = PTHREAD_MUTEX_INITIALIZER;
 static HashTable *ht = NULL;
 
-// Insert a value into the BST with a lock
+extern int * SORTED_INPUT;
+
+// Insert a value into the Hash Table with a lock
 void * doInsert(void *arg)
 {
     int i;
     int which = *(int*)arg;
+    //HashTable *ht = (HashTable*)arg;
     if (which == PC1) {
         while((i = consume1()) != -1) {
             //insert each value
@@ -47,13 +50,13 @@ void * doInsert(void *arg)
 double doHTv2(int * sortedInput, int size, int numThreads, int which)
 {
     int i;
-    int treeValues[size];
+    int hashValues[size];
 
     // Initialize global lock
     pthread_mutex_init(&hash_lock, NULL);
 
     // Takes the place of resetBSTv1
-    ht = hash_table_create(size);
+    HashTable * temp = hash_table_create(size);
 
     TIMERSTART(HTv2)
 
@@ -69,16 +72,24 @@ double doHTv2(int * sortedInput, int size, int numThreads, int which)
         Pthread_join(threads[i], NULL);
     }
 
-
     //get the values
+    HSTv2GetNums(temp, hashValues);
+
+
     // Takes the place of BSTv1GetNums & inorder
     hash_table_print(ht);
 
 
     TIMERSTOP(HTv2)
-    double treeTime = DURATION(HTv2)
+    double hashTime = DURATION(HTv2)
 
     //check for correctness
-    compare(sortedInput, treeValues, size);
-    return treeTime;
+    compare(sortedInput, hashValues, size);
+    return hashTime;
 }
+
+void HSTv2GetNums(HashTable * ht, int * array)
+{
+    inorder_ht(ht, array);
+}
+

@@ -28,7 +28,7 @@ void hash_table_insert(HashTable *ht, int data);
 void hash_table_remove(HashTable *ht, int data);
 void hash_table_print(HashTable *ht);
 void HSTv1GetNums(HashTable * ht, int * array);
-//void HSTv2GetNums(int * array);
+void HSTv2GetNums(HashTable * ht, int * array);
 //void HSTv3GetNums(int * array);
 //void HSTv4GetNums(int * array);
 int cmpfc(const void* a, const void* b);

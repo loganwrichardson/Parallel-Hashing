@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <semaphore.h>
+#include <string.h>
 #include "helpers.h"
 #include "macros.h"
 #include "wrappers.h"
@@ -26,7 +27,7 @@ double doHTv1(int * sortedInput, int size, int which)
 
     TIMERSTART(HTv1)
 
-    int * input = malloc(sizeof(int) * size);
+    //int * input = malloc(sizeof(int) * size);
     if (which == PC1) {
         while((i = consume1()) != -1) {
             //insert each value - Takes the place of BSTv1Insert
@@ -40,6 +41,7 @@ double doHTv1(int * sortedInput, int size, int which)
     }
 
     HSTv1GetNums(temp, hashValues);
+    memcpy(sortedInput, hashValues, sizeof(int) * size);
 
     //get the values
     // Takes the place of BSTv1GetNums & inorder
@@ -47,11 +49,11 @@ double doHTv1(int * sortedInput, int size, int which)
 
 
     TIMERSTOP(HTv1)
-    double treeTime = DURATION(HTv1)
+    double hashTime = DURATION(HTv1)
 
     //check for correctness
-    compare(sortedInput, hashValues, size);
-    return treeTime;
+    //compare(sortedInput, hashValues, size);
+    return hashTime;
 }
 
 void HSTv1GetNums(HashTable * ht, int * array)
@@ -76,7 +78,6 @@ void inorder_ht(HashTable * ht, int * array)
     int j = 0;
     LinkedList * cur_list = ht->table[j];
     Node * cur_node = cur_list->head;
-    int size = HASH_TABLE_SIZE;
     while (cur_list != NULL) {
         while (cur_node != NULL) {
             array[i] = cur_node->data;
