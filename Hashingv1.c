@@ -72,19 +72,21 @@ void inorder_ht(HashTable * ht, int * array)
     {
         return;
     }
-    int i = 1;
+    int i = 0;
+    int j = 0;
+    LinkedList * cur_list = ht->table[j];
+    Node * cur_node = cur_list->head;
     int size = HASH_TABLE_SIZE;
-    while (ht->table[i] != NULL) {
-        while (ht->table[i]->head != NULL) {
-            array[i] = ht->table[i]->head->data;
-            ht->table[i]->head = ht->table[i]->head->next;
+    while (cur_list != NULL) {
+        while (cur_node != NULL) {
+            array[i] = cur_node->data;
+            cur_node = cur_node->next;
+            i++;
         }
-        i++;
+        j++;
+        cur_list = ht->table[j];
+        i=0;
     }
 
-    qsort(array, size, sizeof(int), cmpfc_ptr);
-
-//    inorder(ptr->left, array);
-//    array[array_index++] = ptr->val;
-//    inorder(ptr->right, array);
+    //qsort(array, size, sizeof(int), cmpfc_ptr);
 }

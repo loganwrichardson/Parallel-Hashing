@@ -31,6 +31,7 @@ void node_destroy(Node *node);
 LinkedList* linked_list_create();
 void linked_list_destroy(LinkedList *list);
 void linked_list_insert(LinkedList *list, int data);
+void linked_list_in_order_insert(LinkedList *list, int data);
 void linked_list_remove(LinkedList *list, int data);
 void linked_list_print(LinkedList *list);
 

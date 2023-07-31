@@ -29,6 +29,32 @@ void linked_list_destroy(LinkedList *list) {
     return;
 }
 
+void linked_list_in_order_insert(LinkedList *list, int data) {
+    Node *new_node = node_create(data, NULL);
+    Node *prev = list->head;
+    Node *cur_node = list->head;
+
+    if (list->size == 0) {
+        list->head = new_node;
+        list->size++;
+    }
+    else if (new_node->data <= list->head->data) {
+        new_node->next = list->head;
+        list->head = new_node;
+        list->size++;
+    }
+    else {
+        while (cur_node != NULL && new_node->data > cur_node->data) {
+            prev = cur_node;
+            cur_node = cur_node->next;
+        }
+        prev->next = new_node;
+        new_node->next = cur_node;
+        list->size++;
+    }
+    return;
+}
+
 void linked_list_insert(LinkedList *list, int data) {
     Node *new_node = node_create(data, NULL);
     if (list->size > 0) {
@@ -76,7 +102,7 @@ void linked_list_print(LinkedList *list) {
     } else {
         while (cur_node != NULL) {
             if (cur_node->next != NULL) {
-                printf("%d, \n", cur_node->data);
+                printf("%d, ", cur_node->data);
             } else {
                 printf("%d)\n", cur_node->data);
             }

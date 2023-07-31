@@ -52,7 +52,7 @@ void hash_table_insert(HashTable * ht, int data) {
     // Get the hash key
     int key = hash_func(ht, data);
     // Insert the data
-    linked_list_insert(ht->table[key], data);
+    linked_list_in_order_insert(ht->table[key], data);
     return;
 }
 
