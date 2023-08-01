@@ -24,7 +24,6 @@ double doHTv1(int * sortedInput, int size, int which)
     // Takes the place of resetBSTv1
     HashTable * temp = hash_table_create(size);
 
-
     TIMERSTART(HTv1)
 
     //int * input = malloc(sizeof(int) * size);
@@ -43,8 +42,7 @@ double doHTv1(int * sortedInput, int size, int which)
     HSTv1GetNums(temp, hashValues);
     memcpy(sortedInput, hashValues, sizeof(int) * size);
 
-    //get the values
-    // Takes the place of BSTv1GetNums & inorder
+    // Print for testing
     hash_table_print(temp);
 
 
@@ -88,6 +86,4 @@ void inorder_ht(HashTable * ht, int * array)
         cur_list = ht->table[j];
         i=0;
     }
-
-    //qsort(array, size, sizeof(int), cmpfc_ptr);
 }

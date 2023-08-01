@@ -5,6 +5,7 @@
 #include <stdlib.h>
 #include <semaphore.h>
 #include <pthread.h>
+#include <stdio.h>
 #include "helpers.h"
 #include "macros.h"
 #include "wrappers.h"
@@ -16,14 +17,16 @@
 pthread_mutex_t hash_lock = PTHREAD_MUTEX_INITIALIZER;
 static HashTable *ht = NULL;
 
-extern int * SORTED_INPUT;
-
 // Insert a value into the Hash Table with a lock
 void * doInsert(void *arg)
 {
     int i;
-    int which = *(int*)arg;
-    //HashTable *ht = (HashTable*)arg;
+    //int which = *(int*)arg;
+    Args * myArgs = (Args*)arg;
+
+    int which = myArgs->whichPtr;
+    HashTable * ht = myArgs->ht;
+
     if (which == PC1) {
         while((i = consume1()) != -1) {
             //insert each value
@@ -50,7 +53,7 @@ void * doInsert(void *arg)
 double doHTv2(int * sortedInput, int size, int numThreads, int which)
 {
     int i;
-    int hashValues[size];
+    int hashValues2[size];
 
     // Initialize global lock
     pthread_mutex_init(&hash_lock, NULL);
@@ -62,9 +65,15 @@ double doHTv2(int * sortedInput, int size, int numThreads, int which)
 
     pthread_t threads[numThreads];
     for(i = 0; i< numThreads; i++){
-        int* whichPtr = (int*)Malloc(sizeof(int));
-        *whichPtr = which;
-        Pthread_create(&threads[i], NULL, doInsert, whichPtr);
+
+        Args * myArgs = args_create(temp, which);
+
+        // Old Code
+        //int* whichPtr = (int*)Malloc(sizeof(int));
+        //*whichPtr = which;
+        //Pthread_create(&threads[i], NULL, doInsert, whichPtr);
+
+        Pthread_create(&threads[i], NULL, doInsert, (void*)myArgs);
     }
 
     // unlock tree after all threads are done
@@ -73,18 +82,24 @@ double doHTv2(int * sortedInput, int size, int numThreads, int which)
     }
 
     //get the values
-    HSTv2GetNums(temp, hashValues);
+    HSTv2GetNums(temp, hashValues2);
 
 
-    // Takes the place of BSTv1GetNums & inorder
-    hash_table_print(ht);
+    //Print for testing
+    hash_table_print(temp);
 
 
     TIMERSTOP(HTv2)
     double hashTime = DURATION(HTv2)
 
+    printf("\nPrinting the sortedInput from HashingV1.c");
+    printNums(sortedInput, size);
+    printf("\nPrinting the hashValues from HashingV2.c");
+    printNums(hashValues2, size);
+    printf("\n");
+
     //check for correctness
-    compare(sortedInput, hashValues, size);
+    compare(sortedInput, hashValues2, size);
     return hashTime;
 }
 
@@ -93,3 +108,10 @@ void HSTv2GetNums(HashTable * ht, int * array)
     inorder_ht(ht, array);
 }
 
+Args* args_create(HashTable * ht, int whichPtr) {
+    Args * args = calloc(1, sizeof(Args*));
+    args->whichPtr = *(int*)Malloc(sizeof(int));
+    args->whichPtr = whichPtr;
+    args->ht = ht;
+    return args;
+}

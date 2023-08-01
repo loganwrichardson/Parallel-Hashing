@@ -20,13 +20,13 @@ static void printUsage();
 //                                        int size, int numConsume,
 //                                        int numProduce, int which);
 //static void runBSTWithProducerConsumer2(int * input, int * sortedInput,
-//                                        int size, int numConsume,\
+//                                        int size, int numConsume,
 //                                        int numProduce, int which);
 static void runHashingWithProducerConsumer1(int * input, int * sortedInput, int size,
                                int numConsume, int numProduce, int which);
 
 //default tree size and default number of threads
-#define SIZE_DEFAULT 5000
+#define SIZE_DEFAULT 1000
 #define NUMCONSUME_DEFAULT 4
 #define NUMPRODUCE_DEFAULT 4
 
@@ -40,13 +40,13 @@ int main(int argc, char * argv[])
    int * sortedInput = malloc(sizeof(int) * size);
 
    //randomly generate some input
-   makeInput(input, size);
-   memcpy(sortedInput, input, sizeof(int) * size);
+   //makeInput(input, size);
+   //memcpy(sortedInput, input, sizeof(int) * size);
 
     printf("Sorting the input to check for correctness (n = %d).\n",
           size);
    //sort the input to check for correctness
-   sortInput(sortedInput, size);
+   //sortInput(sortedInput, size);
 
 //   //ProducerConsumer1 is implemented using semaphores
 //   runBSTWithProducerConsumer1(input, sortedInput, size,
