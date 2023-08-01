@@ -43,7 +43,7 @@ double doHTv1(int * sortedInput, int size, int which)
     memcpy(sortedInput, hashValues, sizeof(int) * size);
 
     // Print for testing
-    hash_table_print(temp);
+    //hash_table_print(temp);
 
 
     TIMERSTOP(HTv1)

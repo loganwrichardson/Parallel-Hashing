@@ -15,7 +15,7 @@
 #include "hash_table.h"
 
 pthread_mutex_t hash_lock = PTHREAD_MUTEX_INITIALIZER;
-static HashTable *ht = NULL;
+//static HashTable *ht = NULL;
 
 // Insert a value into the Hash Table with a lock
 void * doInsert(void *arg)
@@ -86,17 +86,17 @@ double doHTv2(int * sortedInput, int size, int numThreads, int which)
 
 
     //Print for testing
-    hash_table_print(temp);
+    //hash_table_print(temp);
 
 
     TIMERSTOP(HTv2)
     double hashTime = DURATION(HTv2)
 
-    printf("\nPrinting the sortedInput from HashingV1.c");
-    printNums(sortedInput, size);
-    printf("\nPrinting the hashValues from HashingV2.c");
-    printNums(hashValues2, size);
-    printf("\n");
+//    printf("\nPrinting the sortedInput from HashingV1.c");
+//    printNums(sortedInput, size);
+//    printf("\nPrinting the hashValues from HashingV2.c");
+//    printNums(hashValues2, size);
+//    printf("\n");
 
     //check for correctness
     compare(sortedInput, hashValues2, size);

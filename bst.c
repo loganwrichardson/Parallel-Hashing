@@ -11,8 +11,8 @@
 #include"hashingversions.h"
 
 //static makes these local to this file
-static void makeInput(int * nums, int size);
-static void sortInput(int * nums, int size);
+//static void makeInput(int * nums, int size);
+//static void sortInput(int * nums, int size);
 static void getArgs(int argc, char * argv[], int * size,
                     int * numConsume, int * numProduce);
 static void printUsage();
