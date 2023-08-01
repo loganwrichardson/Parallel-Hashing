@@ -92,11 +92,11 @@ double doHTv2(int * sortedInput, int size, int numThreads, int which)
     TIMERSTOP(HTv2)
     double hashTime = DURATION(HTv2)
 
-//    printf("\nPrinting the sortedInput from HashingV1.c");
-//    printNums(sortedInput, size);
-//    printf("\nPrinting the hashValues from HashingV2.c");
-//    printNums(hashValues2, size);
-//    printf("\n");
+    printf("\nPrinting the sortedInput from HashingV1.c");
+    printNums(sortedInput, size);
+    printf("\nPrinting the hashValues from HashingV2.c");
+    printNums(hashValues2, size);
+    printf("\n");
 
     //check for correctness
     compare(sortedInput, hashValues2, size);

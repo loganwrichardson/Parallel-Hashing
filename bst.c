@@ -11,7 +11,7 @@
 #include"hashingversions.h"
 
 //static makes these local to this file
-//static void makeInput(int * nums, int size);
+static void makeInput(int * nums, int size);
 //static void sortInput(int * nums, int size);
 static void getArgs(int argc, char * argv[], int * size,
                     int * numConsume, int * numProduce);
@@ -26,7 +26,7 @@ static void runHashingWithProducerConsumer1(int * input, int * sortedInput, int 
                                int numConsume, int numProduce, int which);
 
 //default tree size and default number of threads
-#define SIZE_DEFAULT 1000
+#define SIZE_DEFAULT 10
 #define NUMCONSUME_DEFAULT 4
 #define NUMPRODUCE_DEFAULT 4
 
@@ -40,8 +40,8 @@ int main(int argc, char * argv[])
    int * sortedInput = malloc(sizeof(int) * size);
 
    //randomly generate some input
-   //makeInput(input, size);
-   //memcpy(sortedInput, input, sizeof(int) * size);
+   makeInput(input, size);
+   memcpy(sortedInput, input, sizeof(int) * size);
 
     printf("Sorting the input to check for correctness (n = %d).\n",
           size);
@@ -223,7 +223,7 @@ void  runHashingWithProducerConsumer1(int * input, int * sortedInput, int size,
 void runHashingWithProducerConsumer2(int * input, int * sortedInput, int size,
                                  int numConsume, int numProduce, int which)
 {
-    double treeTime;
+    double hashTime;
 
     printf("\nUsing %d threads to produce data for each BST.\n",
            numProduce);
@@ -231,16 +231,16 @@ void runHashingWithProducerConsumer2(int * input, int * sortedInput, int size,
 
     printf("\nBuilding trees with 1 thread.\n");
     createProducers2(input, size, numProduce);
-    treeTime = doBSTv1(sortedInput, size, which);
+    hashTime = doHTv1(sortedInput, size, which);
     joinProducers2();
-    printf("Time: %f sec\n", treeTime);
+    printf("Time: %f sec\n", hashTime);
 
-//    printf("\nBuilding trees with %d threads and one lock per tree.\n",
-//           numConsume);
-//    createProducers2(input, size, numProduce);
-//    treeTime = doBSTv2(sortedInput, size, numConsume, which);
-//    joinProducers2();
-//    printf("Time: %f sec\n", treeTime);
+    printf("\nBuilding trees with %d threads and one lock per tree.\n",
+           numConsume);
+    createProducers2(input, size, numProduce);
+    hashTime = doHTv2(sortedInput, size, numConsume, which);
+    joinProducers2();
+    printf("Time: %f sec\n", hashTime);
 //
 //    printf("\nBuilding trees with %d threads and one lock per node.\n",
 //           numConsume);
