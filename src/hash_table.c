@@ -165,7 +165,6 @@ void inorder_ht(HashTable * ht, int * array) {
  */
 Args* args_create(HashTable * ht, int whichPtr) {
     Args * args = calloc(1, sizeof(Args));
-    //args->whichPtr = *(int*)Malloc(sizeof(int));
     args->whichPtr = whichPtr;
     args->ht = ht;
     return args;
