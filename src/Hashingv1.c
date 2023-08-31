@@ -10,8 +10,8 @@
 #include "wrappers.h"
 #include "producerConsumer1.h"
 #include "producerConsumer2.h"
-#include "BSTversions.h"
 #include "hash_table.h"
+#include "hashingversions.h"
 
 /**
  * Build the Hash Table using just one thread (the calling thread).

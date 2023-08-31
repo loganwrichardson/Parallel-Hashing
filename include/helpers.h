@@ -16,7 +16,6 @@ void getArgsHash(int argc, char * argv[], int * numBuckets, int * numNodes, int 
 
 void printUsage();
 
-#define BST_DEFAULT_SIZE 1000 // Controls the size of the bst
 #define NUMBUCKETS_DEFAULT 100 // Controls the number of buckets
 #define NUMNODES_DEFAULT 100000 // Controls the number of nodes
 #define NUMCONSUME_DEFAULT 4 // Controls the number of consumers

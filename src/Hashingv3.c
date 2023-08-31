@@ -9,8 +9,8 @@
 #include "wrappers.h"
 #include "producerConsumer1.h"
 #include "producerConsumer2.h"
-#include "BSTversions.h"
 #include "hash_table.h"
+#include "hashingversions.h"
 
 /**
  * Insert a value into the Hash Table with X threads and a lock for each node.

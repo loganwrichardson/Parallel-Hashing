@@ -40,66 +40,66 @@ void printNums(int * nums, int size)
    }
 }
 
-/**
- * getArgsBST
- * Parse the command line argument to get the number of values to insert into the BST,
- * the number of consumer threads, and the number of producer threads
- * @param argc: int the number of command line arguments
- * @param argv: char * the array of command line arguments
- * @param size: int * pointer to int to be set to the number of values to be inserted into the BST
- * @param numConsume int * pointer to int to be set to the number of consumer threads to get a value from
- * the producer-consumer buffer and insert into the BST
- * @param numProduce int * pointer to the int to be set to the number of producer threads
- * to fill the producer-consumer buffer
- */
-void getArgsBST(int argc, char * argv[], int * size,
-             int * numConsume, int * numProduce)
-{
-    char opt;
-    (*size) = BST_DEFAULT_SIZE;
-    (*numConsume) = NUMCONSUME_DEFAULT;
-    (*numProduce) = NUMPRODUCE_DEFAULT;
-    while((opt = getopt(argc, argv, "s:c:p:h")) != -1)
-    {
-        switch (opt)
-        {
-            case 'c':
-                //number of consumers
-                (*numConsume) = atoi(optarg);
-                if ((*numConsume) <= 1)
-                {
-                    fprintf(stderr, "bad -c option: Number of ");
-                    fprintf(stderr, "consumer threads needs to be > 1\n");
-                    printUsage();
-                }
-                break;
-            case 'p':
-                //number of producers
-                (*numProduce) = atoi(optarg);
-                if ((*numProduce) <= 1)
-                {
-                    fprintf(stderr, "bad -p option: Number of ");
-                    fprintf(stderr, "producer threads needs to be > 1\n");
-                    printUsage();
-                }
-                break;
-            case 's':
-                (*size) = atoi(optarg);
-                if ((*size) <= 0)
-                {
-                    fprintf(stderr, "bad -s option: Number of ");
-                    fprintf(stderr, "values to insert needs to be > 0\n");
-                    printUsage();
-                }
-                break;
-            case 'h':
-                printUsage();
-            case '?':
-                printUsage();
-
-        }
-    }
-}
+///**
+// * getArgsBST
+// * Parse the command line argument to get the number of values to insert into the BST,
+// * the number of consumer threads, and the number of producer threads
+// * @param argc: int the number of command line arguments
+// * @param argv: char * the array of command line arguments
+// * @param size: int * pointer to int to be set to the number of values to be inserted into the BST
+// * @param numConsume int * pointer to int to be set to the number of consumer threads to get a value from
+// * the producer-consumer buffer and insert into the BST
+// * @param numProduce int * pointer to the int to be set to the number of producer threads
+// * to fill the producer-consumer buffer
+// */
+//void getArgsBST(int argc, char * argv[], int * size,
+//             int * numConsume, int * numProduce)
+//{
+//    char opt;
+//    (*size) = BST_DEFAULT_SIZE;
+//    (*numConsume) = NUMCONSUME_DEFAULT;
+//    (*numProduce) = NUMPRODUCE_DEFAULT;
+//    while((opt = getopt(argc, argv, "s:c:p:h")) != -1)
+//    {
+//        switch (opt)
+//        {
+//            case 'c':
+//                //number of consumers
+//                (*numConsume) = atoi(optarg);
+//                if ((*numConsume) <= 1)
+//                {
+//                    fprintf(stderr, "bad -c option: Number of ");
+//                    fprintf(stderr, "consumer threads needs to be > 1\n");
+//                    printUsage();
+//                }
+//                break;
+//            case 'p':
+//                //number of producers
+//                (*numProduce) = atoi(optarg);
+//                if ((*numProduce) <= 1)
+//                {
+//                    fprintf(stderr, "bad -p option: Number of ");
+//                    fprintf(stderr, "producer threads needs to be > 1\n");
+//                    printUsage();
+//                }
+//                break;
+//            case 's':
+//                (*size) = atoi(optarg);
+//                if ((*size) <= 0)
+//                {
+//                    fprintf(stderr, "bad -s option: Number of ");
+//                    fprintf(stderr, "values to insert needs to be > 0\n");
+//                    printUsage();
+//                }
+//                break;
+//            case 'h':
+//                printUsage();
+//            case '?':
+//                printUsage();
+//
+//        }
+//    }
+//}
 
 /**
  * getArgsHash
@@ -179,13 +179,11 @@ void getArgsHash(int argc, char * argv[], int * numBuckets, int * numNodes,
  */
 void printUsage()
 {
-    printf("usage: ./bst [-s <size>] [-c <cthreads>] [-p <pthreads> ] [ -h ] \n");
-    printf("       <size> is the number of nodes to insert\n");
-    printf("              default: %d\n", BST_DEFAULT_SIZE);
-    printf("       <numBuckets> is the number of buckets to sort into\n");
-    printf("              default: %d\n", NUMBUCKETS_DEFAULT);
+    printf("usage: ./hash [-s <numNodes>] [-c <cthreads>] [-p <pthreads> ] [ -h ] \n");
     printf("       <numNodes> is the number of nodes to insert\n");
     printf("              default: %d\n", NUMNODES_DEFAULT);
+    printf("       <numBuckets> is the number of buckets to sort into\n");
+    printf("              default: %d\n", NUMBUCKETS_DEFAULT);
     printf("       <cthreads> is the number of consumer threads to use\n");
     printf("              default: %d\n", NUMCONSUME_DEFAULT);
     printf("       <threads> is the number of producer threads to use\n");

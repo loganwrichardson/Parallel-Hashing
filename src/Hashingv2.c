@@ -9,7 +9,7 @@
 #include "wrappers.h"
 #include "producerConsumer1.h"
 #include "producerConsumer2.h"
-#include "BSTversions.h"
+#include "hashingversions.h"
 #include "hash_table.h"
 
 pthread_mutex_t hash_lock = PTHREAD_MUTEX_INITIALIZER;
